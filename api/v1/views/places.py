@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""places"""
+"""Module for managing places in the application."""
+
 from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
@@ -8,11 +9,18 @@ from models.place import Place
 from datetime import datetime
 import uuid
 
-
 @app_views.route('/cities/<city_id>/places', methods=['GET'])
 @app_views.route('/cities/<city_id>/places/', methods=['GET'])
 def list_places_of_city(city_id):
-    '''Retrieves a list of all Place objects in city'''
+    """
+    Retrieves a list of all Place objects in a city.
+
+    Args:
+        city_id (str): The ID of the city to retrieve places from.
+
+    Returns:
+        A JSON list of all places in the city. If the city is not found, it aborts with a 404 error.
+    """
     all_cities = storage.all("City").values()
     city_obj = [obj.to_dict() for obj in all_cities if obj.id == city_id]
     if city_obj == []:
@@ -24,7 +32,15 @@ def list_places_of_city(city_id):
 
 @app_views.route('/places/<place_id>', methods=['GET'])
 def get_place(place_id):
-    '''Retrieves a Place object'''
+    """
+    Retrieves a Place object.
+
+    Args:
+        place_id (str): The ID of the place to retrieve.
+
+    Returns:
+        A JSON representation of the place. If the place is not found, it aborts with a 404 error.
+    """
     all_places = storage.all("Place").values()
     place_obj = [obj.to_dict() for obj in all_places if obj.id == place_id]
     if place_obj == []:
@@ -34,7 +50,15 @@ def get_place(place_id):
 
 @app_views.route('/places/<place_id>', methods=['DELETE'])
 def delete_place(place_id):
-    '''Deletes a Place object'''
+    """
+    Deletes a Place object.
+
+    Args:
+        place_id (str): The ID of the place to delete.
+
+    Returns:
+        An empty JSON object with the status code 200. If the place is not found, it aborts with a 404 error.
+    """
     all_places = storage.all("Place").values()
     place_obj = [obj.to_dict() for obj in all_places
                  if obj.id == place_id]
@@ -50,7 +74,15 @@ def delete_place(place_id):
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'])
 def create_place(city_id):
-    '''Creates a Place'''
+    """
+    Creates a Place.
+
+    Args:
+        city_id (str): The ID of the city where the place will be created.
+
+    Returns:
+        A JSON representation of the created place with the status code 201. If the city or user is not found, or if the request is not a JSON, or if the JSON does not contain a 'user_id' or 'name', it aborts with a 400 or 404 error.
+    """
     if not request.get_json():
         abort(400, 'Not a JSON')
     if 'user_id' not in request.get_json():
@@ -78,7 +110,15 @@ def create_place(city_id):
 
 @app_views.route('/places/<place_id>', methods=['PUT'])
 def updates_place(place_id):
-    '''Updates a Place object'''
+    """
+    Updates a Place object.
+
+    Args:
+        place_id (str): The ID of the place to update.
+
+    Returns:
+        A JSON representation of the updated place. If the place is not found, or if the request is not a JSON, it aborts with a 400 or 404 error.
+    """
     all_places = storage.all("Place").values()
     place_obj = [obj.to_dict() for obj in all_places if obj.id == place_id]
     if place_obj == []:
