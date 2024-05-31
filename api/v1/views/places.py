@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""This module defines routes related to Place objects in a Flask web application.
+"""
+This module defines routes related to Place objects in a Flask web application.
 
 It includes routes for:
 - Listing all Place objects in a specified City.
